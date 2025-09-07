@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Conversor de Moedas em Tempo Real</title>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            background-size: cover;
+            min-height: 100vh;
+            background-image: url(https://picsum.photos/1920/1080);
+        }
+
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 30px;
+            background-color: #ffffffdd;
+            border: 4px solid #000d99;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        h2 {
+            text-align: center;
+            color: #003366;
+        }
+        h1{
+            text-align: center;
+            color: #1b0ddd;
+        }
+
+        label {
+            font-weight: bold;
+            color: #000e77;
+            display: block;
+            margin-top: 15px;
+        }
+
+        input,
+        select,
+        button {
+            width: 100%;
+            padding: 10px;
+            margin-top: 8px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+        }
+
+        select {
+            background-color: #f0f0f0;
+        }
+
+        button {
+            margin-top: 20px;
+            background-color: #206b0b;
+            color: white;
+            font-weight: bold;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #45c417;
+        }
+
+        #resultado {
+            margin-top: 20px;
+            text-align: center;
+            font-size: 18px;
+            color: #081f96;
+            font-weight: bold;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="container">
+        <h1><b>Autor:Ruberlandio.</b></h1>
+        <h2>><b>Conversor de Moedas</b></h2>
+
+        <label for="valor">Valor:</label>
+        <input type="number" id="valor" placeholder="Digite o valor">
+
+        <label for="moedaOrigem">Moeda de Origem:</label>
+        <select id="moedaOrigem">
+            <option value="BRL">🇧🇷 Real (R$)</option>
+            <option value="USD">🇺🇸 Dólar (US$)</option>
+            <option value="EUR">🇪🇺 Euro (EUR)</option>
+            <option value="GBP">🇬🇧 Libra (GBP)</option>
+            <option value="JPY">🇯🇵 Iene (JPY)</option>
+            <option value="ARS">🇦🇷 Peso Argentino (ARS)</option>
+            <option value="CAD">🇨🇦 Dólar Canadense (CAD)</option>
+            <option value="KRW">kor Won (KRW)</option>
+        </select>
+
+        <label for="moedaDestino">Moeda de Destino:</label>
+        <select id="moedaDestino">
+            <option value="BRL">🇧🇷 Real (R$)</option>
+            <option value="USD">🇺🇸 Dólar (US$)</option>
+            <option value="EUR">🇪🇺 Euro (EUR)</option>
+            <option value="GBP">🇬🇧 Libra (GBP)</option>
+            <option value="JPY">🇯🇵 Iene (JPY)</option>
+            <option value="ARS">🇦🇷 Peso Argentino (ARS)</option>
+            <option value="CAD">🇨🇦 Dólar Canadense (CAD)</option>
+            <option value="KRW">kor Won (KRW)</option>
+        </select>
+
+        <button onclick="converter()"><b style="font-size:20px;">Converter</b></button>
+
+        <h3 id="resultado"></h3>
+    </div>
+
+    <script>
+        async function converter() {
+            const valor = parseFloat(document.getElementById("valor").value);
+            const moedaOrigem = document.getElementById("moedaOrigem").value;
+            const moedaDestino = document.getElementById("moedaDestino").value;
+
+            if (isNaN(valor) || valor <= 0) {
+                alert("Por favor, insira um valor válido.");
+                return;
+            }
+
+            if (moedaOrigem === moedaDestino) {
+                document.getElementById("resultado").textContent = `Resultado: ${valor.toFixed(2)} ${moedaDestino}`;
+                return;
+            }
+
+            try {
+                const API_KEY = "2c3668f8c85e3acc5fe868a3488039be"; // 👈 Substitua pela sua chave real
+                const url = `https://api.exchangerate.host/convert?from=${moedaOrigem}&to=${moedaDestino}&amount=${valor}&access_key=${API_KEY}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                const resultado = data.result;
+
+                if (resultado) {
+                    document.getElementById("resultado").textContent = `Resultado: ${resultado.toFixed(2)} ${moedaDestino}`;
+                } else {
+                    alert("Erro ao obter taxa de câmbio.");
+                    console.error("Resposta da API:", data);
+                }
+            } catch (error) {
+                alert("Erro ao conectar com o serviço de câmbio.");
+                console.error(error);
+            }
+        }
+    </script>
+
+</body>
+
+</html>
